@@ -9,3 +9,11 @@ body {
 div.input-group>select.custom-select {
   flex: 0.1 1 100px;
 }
+
+div.input-group>input:nth-child(1) {
+  flex: 0.1 1 100px;
+}
+
+#alert{
+  margin-top: 40px;
+}

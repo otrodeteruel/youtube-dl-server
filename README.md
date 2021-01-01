@@ -1,86 +1,63 @@
-[![Docker Stars Shield](https://img.shields.io/docker/stars/kmb32123/youtube-dl-server.svg?style=flat-square)](https://hub.docker.com/r/kmb32123/youtube-dl-server/)
-[![Docker Pulls Shield](https://img.shields.io/docker/pulls/kmb32123/youtube-dl-server.svg?style=flat-square)](https://hub.docker.com/r/kmb32123/youtube-dl-server/)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/manbearwiz/youtube-dl-server/master/LICENSE)
 
+fork sobre el proyecto https://github.com/manbearwiz/youtube-dl-server
+
+  
 # youtube-dl-server
 
-Very spartan Web and REST interface for downloading youtube videos onto a server. [`starlette`](https://github.com/encode/starlette) + [`youtube-dl`](https://github.com/rg3/youtube-dl).
+youtube-dl es una aplicación estupenda para descargar videos de internet o descargar y convertir a audio, yo la llevo usando desde hace mucho tiempo, lo único es que es una aplicación de terminal, no tiene entorno gráfico, con la idea de poner servicio en marcha en mi raspberry pi para usarlos en mi red local, me puse a buscar un youtube-dl con interface web con docker y me encontré en internet este proyecto.
 
 ![screenshot][1]
 
-## Running
+Lo he tenido varios dias en mi raspberry y funciona perfectamente, pero como no puedo quedarme quieto, he decidido hacerle algunos cambios para adaptado perfectamente a mis necesidades, los cambios son los siguiente:
 
-### Docker CLI
+ - he simplificado los formatos a solo a audio y videos.
+ - he puesto para que se guarden por separado los audios y los videos en sus carpetas correspondientes.
+ - he añadido la opción de carpeta sobre todo para la descarga de listas que se introducen todas en la carpeta, es decir, si se rellena carpeta por ejemplo "curso de python" y se pega la url del video o la lista y todos los videos se introducirán en /video/curso de python.
+ - he creado una imagen para arquitectura arm de raspberry
 
-This example uses the docker run command to create the container to run the app. Here we also use host networking for simplicity. Also note the `-v` argument. This directory will be used to output the resulting videos
+## para correr el contenedor
 
-```shell
-docker run -d --net="host" --name youtube-dl -v /home/core/youtube-dl:/youtube-dl kmb32123/youtube-dl-server
-```
+con docker:
 
-### Docker Compose
+    docker run --rm --name youtube-dl -p 8080:8080 -v $PWD/youtube-dl:/youtube-dl otrodeteruel/youtube-dl-server
 
-This is an example service definition that could be put in `docker-compose.yml`. This service uses a VPN client container for its networking.
+accedemos al navegador 
 
-```yml
-  youtube-dl:
-    image: "kmb32123/youtube-dl-server"
-    network_mode: "service:vpn"
-    volumes:
-      - /home/core/youtube-dl:/youtube-dl
-    restart: always
-```
+http://localhost:8080/youtube-dl
 
-### Python
+con docker compose:
 
-If you have python ^3.6.0 installed in your PATH you can simply run like this, providing optional environment variable overrides inline.
 
-```shell
-YDL_SERVER_PORT=8123 YDL_UPDATE_TIME=False python3 -u ./youtube-dl-server.py
-```
+## Como lo he hecho?
 
-In this example, `YDL_UPDATE_TIME=False` is the same as the command line option `--no-mtime`.
+### entorno de desarrollo
 
-## Usage
+para hacer cambios del programa he usado como entorno el mismo contenedor, para ello lo corremos
 
-### Start a download remotely
+    docker run -it -rm --name youtube-dl -p 8080:8080 -v $PWD/.:/usr/src/app kmb32123/youtube-dl-server sh
 
-Downloads can be triggered by supplying the `{{url}}` of the requested video through the Web UI or through the REST interface via curl, etc.
+y estamos dentro del contenedor. Para ejecutar el servidor y probar ejecutamos:
 
-#### HTML
+    python 
 
-Just navigate to `http://{{host}}:8080/youtube-dl` and enter the requested `{{url}}`.
+accedemos al navegador 
 
-#### Curl
+    http://localhost:8080/youtube-dl
 
-```shell
-curl -X POST --data-urlencode "url={{url}}" http://{{host}}:8080/youtube-dl/q
-```
+### crear nuevo docker
 
-#### Fetch
+docker build --no-cache --push . -t otrodeteruel/youtube-dl-server
 
-```javascript
-fetch(`http://${host}:8080/youtube-dl/q`, {
-  method: "POST",
-  body: new URLSearchParams({
-    url: url,
-    format: "bestvideo"
-  }),
-});
-```
+para la imagen del raspberry cambiamos en dockerfile 
 
-#### Bookmarklet
+copiamos en el rapsberry 
 
-Add the following bookmarklet to your bookmark bar so you can conviently send the current page url to your youtube-dl-server instance.
+rsync -avzrh -e ssh ./youtube-dl-server pi@192.168.1.222:~/
 
-```javascript
-javascript:!function(){fetch("http://${host}:8080/youtube-dl/q",{body:new URLSearchParams({url:window.location.href,format:"bestvideo"}),method:"POST"})}();
-```
+    FROM python:alpine
 
-## Implementation
+    por
 
-The server uses [`starlette`](https://github.com/encode/starlette) for the web framework and [`youtube-dl`](https://github.com/rg3/youtube-dl) to handle the downloading. The integration with youtube-dl makes use of their [python api](https://github.com/rg3/youtube-dl#embedding-youtube-dl).
+    FROM arm32v7/python:alpine
 
-This docker image is based on [`python:alpine`](https://registry.hub.docker.com/_/python/) and consequently [`alpine:3.8`](https://hub.docker.com/_/alpine/).
-
-[1]:youtube-dl-server.png
+crear desde el raspberry

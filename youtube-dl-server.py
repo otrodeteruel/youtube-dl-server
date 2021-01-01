@@ -33,7 +33,13 @@ async def dl_queue_list(request):
 async def q_put(request):
     form = await request.form()
     url = form.get("url").strip()
-    options = {"format": form.get("format")}
+    folder = form.get("folder").strip()
+    type_format = form.get("format").strip()
+    type_formats = { "bestvideo": "audio", "bestaudio": "video" }
+    path = f"{type_formats[type_format]}"
+    if folder !="":
+        path += f"/{folder}"
+    options = {"format": type_format, "outtmpl": f"/youtube-dl/{path}/%(title)s.%(ext)s"}
 
     if not url:
         return JSONResponse(
@@ -72,6 +78,7 @@ def get_ydl_options(request_options):
 
     requested_format = request_options.get("format", "bestvideo")
 
+
     if requested_format in ["aac", "flac", "mp3", "m4a", "opus", "vorbis", "wav"]:
         request_vars["YDL_EXTRACT_AUDIO_FORMAT"] = requested_format
     elif requested_format == "bestaudio":
@@ -82,6 +89,8 @@ def get_ydl_options(request_options):
     ydl_vars = ChainMap(request_vars, os.environ, app_defaults)
 
     postprocessors = []
+
+    requested_outtmpl = request_options.get("outtmpl", ydl_vars["YDL_OUTPUT_TEMPLATE"])
 
     if ydl_vars["YDL_EXTRACT_AUDIO_FORMAT"]:
         postprocessors.append(
@@ -103,7 +112,7 @@ def get_ydl_options(request_options):
     return {
         "format": ydl_vars["YDL_FORMAT"],
         "postprocessors": postprocessors,
-        "outtmpl": ydl_vars["YDL_OUTPUT_TEMPLATE"],
+        "outtmpl": requested_outtmpl,
         "download_archive": ydl_vars["YDL_ARCHIVE_FILE"],
         "updatetime": ydl_vars["YDL_UPDATE_TIME"] == "True",
     }
