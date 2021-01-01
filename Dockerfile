@@ -11,8 +11,7 @@ RUN apk add --no-cache \
   tzdata
 
 ARG USER=myuser
-RUN adduser  --disabled-login --gecos '' ${USER}
-USER ${USER}
+RUN adduser  --disabled-password --gecos '' ${USER}
 RUN mkdir -p /home/${USER}/app
 WORKDIR /home/${USER}/app
 
@@ -22,6 +21,8 @@ RUN apk --update-cache add --virtual build-dependencies gcc libc-dev make \
   && apk del build-dependencies
 
 COPY . /home/${USER}/app
+
+USER ${USER}
 
 EXPOSE 8080
 

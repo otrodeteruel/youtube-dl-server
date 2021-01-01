@@ -7,7 +7,7 @@ fork sobre el proyecto https://github.com/manbearwiz/youtube-dl-server
 youtube-dl es una aplicación estupenda para descargar videos de internet o descargar y convertir a audio, yo la llevo usando desde hace mucho tiempo, lo único es que es una aplicación de terminal, no tiene entorno gráfico, con la idea de poner servicio en marcha en mi raspberry pi para usarlos en mi red local, me puse a buscar un youtube-dl con interface web con docker y me encontré en internet este proyecto.
 
 
-![screenshot](youtube-dl-server.png)
+![screenshot](https://github.com/otrodeteruel/youtube-dl-server/raw/master/youtube-dl-server.png)
 
 
 Lo he tenido varios dias en mi raspberry y funciona perfectamente, pero como no puedo quedarme quieto, he decidido hacerle algunos cambios para adaptado perfectamente a mis necesidades, los cambios son los siguiente:
