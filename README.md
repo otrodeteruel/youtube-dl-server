@@ -16,9 +16,14 @@ Lo he tenido varios dias en mi raspberry y funciona perfectamente, pero como no 
  - he creado una llamada por ajax.
  - he puesto para que se guarden por separado los audios y los videos en sus carpetas correspondientes.
  - he añadido la opción de carpeta sobre todo para la descarga de listas que se introducen todas en la carpeta, es decir, si se rellena carpeta por ejemplo "curso de python" y se pega la url del video o la lista y todos los videos se introducirán en /video/curso de python.
+ - he añadido un usuario para que no descarge los archivos como root
  - he creado una imagen para arquitectura arm de raspberry
 
 ## para correr el contenedor
+
+crear primero la carpeta donde se almacena los videos para no tener problemas de permisos 
+
+    mkdir youtube-dl
 
 con docker:
 

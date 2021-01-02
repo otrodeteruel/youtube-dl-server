@@ -22,6 +22,9 @@ RUN apk --update-cache add --virtual build-dependencies gcc libc-dev make \
 
 COPY . /home/${USER}/app
 
+RUN mkdir /youtube-dl
+RUN chown ${USER}:${USER} /youtube-dl
+
 USER ${USER}
 
 EXPOSE 8080

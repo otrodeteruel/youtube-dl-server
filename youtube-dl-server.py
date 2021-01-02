@@ -35,7 +35,7 @@ async def q_put(request):
     url = form.get("url").strip()
     folder = form.get("folder").strip()
     type_format = form.get("format").strip()
-    type_formats = { "mp3": "audio", "bestvideo": "video" }
+    type_formats = { "bestaudio": "audio", "bestvideo": "video" }
     path = f"{type_formats[type_format]}"
     if folder !="":
         path += f"/{folder}"
