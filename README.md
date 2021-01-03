@@ -12,7 +12,7 @@ youtube-dl es una aplicación estupenda para descargar videos de internet o desc
 
 Lo he tenido varios dias en mi raspberry y funciona perfectamente, pero como no puedo quedarme quieto, he decidido hacerle algunos cambios para adaptado perfectamente a mis necesidades, los cambios son los siguiente:
 
- - he simplificado los formatos a solo a audio y videos.
+ - he simplificado los formatos a solo a audio y videos en el mejor formato que encuentre o forzar en mp4 para video y mp3 para audio.
  - he creado una llamada por ajax.
  - he puesto para que se guarden por separado los audios y los videos en sus carpetas correspondientes.
  - he añadido la opción de carpeta sobre todo para la descarga de listas que se introducen todas en la carpeta, es decir, si se rellena carpeta por ejemplo "curso de python" y se pega la url del video o la lista y todos los videos se introducirán en /video/curso de python.
